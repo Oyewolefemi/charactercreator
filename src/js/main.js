@@ -153,6 +153,79 @@ window.onload = function () {
   var homeBtn = document.querySelector('.site-title')
   var newBtn = document.querySelector('#newCharacterButton')
   var headSizeBtn = document.querySelector('#head-size-slider')
+  // Get the save button from the HTML
+var saveBtn = document.querySelector('.save-btn');
+
+if (saveBtn) {
+  saveBtn.addEventListener('click', savePersona, false);
+}
+
+function savePersona(event) {
+  event.preventDefault();
+
+  // 1. Get the Persona Name from our new input field
+  var personaNameInput = document.getElementById('persona-name-input');
+  var personaName = personaNameInput.value;
+
+  if (!personaName || personaName.trim() === '') {
+    alert('Please enter a Persona Name before saving.');
+    personaNameInput.focus();
+    return;
+  }
+
+  // 2. Get the recipe from the URL hash
+  // The 'hash' object is already available in this project's scope
+  var recipeString = window.location.hash;
+
+  if (recipeString.length < 2) { // Check if hash is more than just '#'
+    alert('Please make some character selections first.');
+    return;
+  }
+
+  // Get the 'sex' from the hash for our database
+  // We know 'hash.get' exists from parse_hash.js
+  var currentSex = hash.get('sex') || 'm'; // Default to 'm' if not set
+
+  // 3. Prepare the data object
+  var data = {
+    personaName: personaName,
+    recipeHash: recipeString, // Send the full hash string (e.g., "#sex=m&skinColor=...")
+    sex: currentSex
+  };
+
+  // 4. Send the data to our new PHP backend
+  console.log('Sending to PHP backend:', data);
+
+  // Make sure your PHP server is running and this path is correct!
+  fetch('/api/save_persona.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => {
+    if (!response.ok) {
+      // If response is not 2xx, get the error message
+      return response.json().then(err => { throw new Error(err.message || 'Unknown server error') });
+    }
+    return response.json();
+  })
+  .then(result => {
+    if (result.status === 'success') {
+      console.log('Success:', result);
+      alert('Persona "' + result.personaName + '" saved with ID: ' + result.personaId);
+      personaNameInput.value = ''; // Clear the input field
+    } else {
+      // Handle custom errors from our PHP script
+      alert('Error saving persona: ' + result.message);
+    }
+  })
+  .catch(error => {
+    console.error('Fetch Error:', error);
+    alert('A critical error occurred: ' + error.message);
+  });
+}
   var background = document.querySelector('#content')
 
   if (homeBtn && typeof gotoNewChar === 'function') { homeBtn.addEventListener('click', gotoNewChar, false) }
