@@ -16,3 +16,53 @@
 @import "tutorial";
 @import "new";
 @import "adverts";
+// --- MODIFICATION START: Styles for new Save controls ---
+.save-container {
+  display: flex;
+  align-items: center;
+  margin-right: 15px; // Add some spacing
+}
+
+.persona-name-input {
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  margin-right: 10px;
+  background: #fff;
+  color: #333;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    border-color: #e35a4e;
+    box-shadow: 0 0 5px rgba(227, 90, 78, 0.5);
+    outline: none;
+  }
+}
+
+// Style for the save button
+.save-btn {
+  background: #4CAF50; // Green background
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; // Prevents button from shrinking
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    background: #45a049;
+    transform: scale(1.1);
+  }
+  
+  .icon-cloud-upload {
+    width: 20px;
+    height: 20px;
+  }
+}
+// --- MODIFICATION END ---
